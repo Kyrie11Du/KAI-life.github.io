@@ -1,2 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Kyire's Blog</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link><description> Sharing Perceptions in this mask-off Space</description><copyright>Kyire's Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/103874291?v=4</url><title>avatar</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link></image><lastBuildDate>Sun, 07 Sep 2025 05:09:59 +0000</lastBuildDate><managingEditor>Kyire's Blog</managingEditor><ttl>60</ttl><webMaster>Kyire's Blog</webMaster><item><title>从KU校队绝对主力，到CUHK校队试训85/100</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/cong-KU-xiao-dui-jue-dui-zhu-li-%EF%BC%8C-dao-CUHK-xiao-dui-shi-xun-85-100.html</link><description>今天主要谈论篮球。</description><guid isPermaLink="true">https://Kyrie11Du.github.io/KAI-life.github.io/post/cong-KU-xiao-dui-jue-dui-zhu-li-%EF%BC%8C-dao-CUHK-xiao-dui-shi-xun-85-100.html</guid><pubDate>Thu, 04 Sep 2025 14:39:32 +0000</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Kyire's Blog</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link><description> Sharing Perceptions in this mask-off Space</description><copyright>Kyire's Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/103874291?v=4</url><title>avatar</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link></image><lastBuildDate>Sun, 07 Sep 2025 05:57:53 +0000</lastBuildDate><managingEditor>Kyire's Blog</managingEditor><ttl>60</ttl><webMaster>Kyire's Blog</webMaster><item><title>Peroviskite review</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/Peroviskite%20review.html</link><description>### SC‘s Current Density-Voltage Characteristics Analysis
+&gt;' A step by step approach to analyse SCs and indentify performance-limiting factors through the analysis of J-V curves'
+-  Power Conversion Efficiency (PCE)
+&gt; $$PCE = Pout/Pin = Jsc · Voc · FF/ Pin$$
+&gt; Pin being the incident light power 
+- Open-circuit Voltage (Voc)
+&gt;'The voltage at which the net current through the cell is zero'
+- Short-circuit Current density (Jsc)
+&gt;'Current Density at which the outer cell voltage is zero'
+- Fill Factor (FF) 
+&gt; $$FF = /frac{Jmpp·Vmpp}{Jsc·Voc}$$
+&gt;Jmpp and Vmpp denote the current density and voltagr at the maximum power point (MPP) respectively.
+
+
+。</description><guid isPermaLink="true">https://Kyrie11Du.github.io/KAI-life.github.io/post/Peroviskite%20review.html</guid><pubDate>Sun, 07 Sep 2025 05:57:25 +0000</pubDate></item><item><title>从KU校队绝对主力，到CUHK校队试训85/100</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/cong-KU-xiao-dui-jue-dui-zhu-li-%EF%BC%8C-dao-CUHK-xiao-dui-shi-xun-85-100.html</link><description>今天主要谈论篮球。</description><guid isPermaLink="true">https://Kyrie11Du.github.io/KAI-life.github.io/post/cong-KU-xiao-dui-jue-dui-zhu-li-%EF%BC%8C-dao-CUHK-xiao-dui-shi-xun-85-100.html</guid><pubDate>Thu, 04 Sep 2025 14:39:32 +0000</pubDate></item></channel></rss>

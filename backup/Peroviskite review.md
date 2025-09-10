@@ -11,4 +11,8 @@
 > $$FF = /frac{Jmpp·Vmpp}{Jsc·Voc}$$
 >Jmpp and Vmpp denote the current density and voltagr at the maximum power point (MPP) respectively.
 
+### 把SAMs的分子做成聚合物 2PACz——Poly-2PACz
 
+<img width="762" height="231" alt="Image" src="https://github.com/user-attachments/assets/6cf3f50d-c1fc-4c80-9895-5f854ba214de" />
+
+<img width="870" height="497" alt="Image" src="https://github.com/user-attachments/assets/85166df8-a2fe-4419-b1f4-e7bc7347221e" />

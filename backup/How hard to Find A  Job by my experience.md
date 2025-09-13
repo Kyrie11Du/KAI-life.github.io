@@ -6,15 +6,16 @@
 ### 器件类
 #### 深圳新凯来-光电工程师
 - 不是很契合，但是涉及photovoltaics，兴许可以一试，但没有什么期望
-- 不是100%base北京https://career.sicarrier.com/#/jobs/detail?code=20&type=3
+- 不是100%能base北京https://career.sicarrier.com/#/jobs/detail?code=20&type=3
 #### JAsolar 晶澳太阳能
 - 通过邮箱投递，暂时没有回信，base北京，钙钛矿太阳能电池相关岗位；https://www.jasolar.com/index.php?m=content&c=index&a=lists&catid=378
 ####  中芯国际（FAB保底）
-- 岗位多，多是FAB，可以接受笔试面试，但是最终是否去依旧值得商榷，选的是pvk或者产品线，相对工作内容轻松一些；https://smics.zhiye.com/campus/?c=1100&p=1%5E-1%2C3%5E-1&PageIndex=2#zw 
+- 岗位多，多是FAB，可以接受笔试面试，但是最终是否去依旧值得商榷，选的是pvk或者产品线，相对工作内容轻松一些；https://smics.zhiye.com/Portal/Apply/Index
 
 <img width="1119" height="534" alt="Image" src="https://github.com/user-attachments/assets/8c00f30f-9074-4e25-ba4e-8e6b03d80814" />
 
-#### 新凯来
+#### 京东方
+- 
 
 
 ### 不合适

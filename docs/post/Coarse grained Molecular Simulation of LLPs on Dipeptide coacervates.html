@@ -25,7 +25,162 @@ Article 1<img width='1863' height='595' alt='Image' src='https://github.com/user
 ---
 ## 2. Detailed information 
 ### 2.1Research process of PArg/PAsp coacervates 
-- 
+
+
+
+
+
+## Martini Tutorial 1 Lipid Self-Assembly （object is DSPC）
+### 1.Generate Topology —— how to calculate the interaction & force between beads
+- Force Field parameters file:
+`martini_v3.0.0.itp`定义所有 Martini3 颗粒类型（bead types）和它们之间的非键相互作用
+`martini_v3.0.0_ffbonded_v2.itp`通用的“带键”参数库（angles、bonds、dihedrals 等）
+`martini_v3.0.0_phospholipids_PC_v2.itp`这里面包含了 DSPC 这一类 PC 头基磷脂的分子拓扑（[moleculetype]、[atoms]、[bonds]...）
+- topology file:
+`dspc.top`
+> #include 'martini_v3.0.0.itp' ; the particle definitions should be included first
+> #include 'martini_v3.0.0_ffbonded_v2.itp' ; the general lipid bonded definitions should be included second
+> #include 'martini_v3.0.0_phospholipids_PC_v2.itp' ; include water definitions here
+> 
+> [ system ]
+> ; This title is arbitrary (but something descriptive helps)
+> DSPC BILAYER SELF-ASSEMBLY
+> 
+> [ molecules ]
+> ; Molecule types and their numbers are written in the order
+> ; they appear in the structure file
+> DSPC 128
+> W 768  ;  
+**the whole system contains 768 water molecules and 128 DSPC molecules.**
+
+### 2.Define Box & Solvate
+- position
+> The first step is to create a simulation box containing a random configuration of 128  distearoyl-phosphatidylcholine (DSPC) lipids. This can be done by starting from a file containing a single DSPC molecule, which you can get from the [Martini 2 lipidome](https://cgmartini.nl/docs/downloads/force-field-parameters/martini2/lipidome.html#phosphatidylcholine-(pc)).
+---
+`DSPC-em.gro`
+> DPPC sim
+>    12
+>     1DPPC   NC3    1   0.485   0.515   2.472
+>     1DPPC   PO4    2   0.589   0.568   2.201
+>     1DPPC   GL1    3   0.509   0.536   1.838
+>     1DPPC   GL2    4   0.772   0.531   1.760
+>     1DPPC   C1A    5   0.396   0.476   1.453
+>     1DPPC   C2A    6   0.446   0.522   1.174
+>     1DPPC   C3A    7   0.421   0.596   0.897
+>     1DPPC   C4A    8   0.434   0.607   0.553
+>     1DPPC   C1B    9   0.922   0.644   1.490
+>     1DPPC   C2B   10   0.943   0.481   1.201
+>     1DPPC   C3B   11   0.926   0.607   0.904
+>     1DPPC   C4B   12   0.936   0.514   0.557
+>    3.00000   3.00000   3.00000
+---
+`128_noW.gro`
+```
+gmx insert-molecules \
+  -ci DPPC-em.gro \
+  -box 7.5 7.5 7.5 \
+  -nmol 128 \
+  -radius 0.21 \
+  -try 500 \
+  -o 128_noW.gro
+```
+
+>  DPPC sim
+>  1536
+>     1DPPC   NC3    1   5.416   6.601   6.849
+>     1DPPC   PO4    2   5.553   6.364   6.737
+>     1DPPC   GL1    3   5.879   6.183   6.729
+>     1DPPC   GL2    4   5.830   6.066   6.486
+>     1DPPC   C1A    5   6.249   6.018   6.732
+>     1DPPC   C2A    6   6.418   5.797   6.662
+>     1DPPC   C3A    7   6.604   5.577   6.671
+>     1DPPC   C4A    8   6.855   5.351   6.605
+>     1DPPC   C1B    9   5.917   5.774   6.363
+>     1DPPC   C2B   10   6.209   5.707   6.218
+>     1DPPC   C3B   11   6.380   5.434   6.241
+>     1DPPC   C4B   12   6.687   5.283   6.128
+>     2DPPC   NC3   13   7.321   2.765   6.253
+>     2DPPC   PO4   14   7.034   2.808   6.302
+>     2DPPC   GL1   15   6.722   2.948   6.152
+> ……
+>   127DPPC   C4B 1524   7.451   0.795  -0.253
+>   128DPPC   NC3 1525   4.122   0.913   6.058
+>   128DPPC   PO4 1526   4.003   0.824   5.803
+>   128DPPC   GL1 1527   3.680   0.790   5.619
+>   128DPPC   GL2 1528   3.769   0.584   5.461
+>   128DPPC   C1A 1529   3.312   0.758   5.451
+>   128DPPC   C2A 1530   3.154   0.700   5.219
+>   128DPPC   C3A 1531   2.966   0.715   5.001
+>   128DPPC   C4A 1532   2.726   0.648   4.763
+>   128DPPC   C1B 1533   3.699   0.502   5.150
+>   128DPPC   C2B 1534   3.437   0.323   5.054
+>   128DPPC   C3B 1535   3.259   0.364   4.787
+>   128DPPC   C4B 1536   2.975   0.228   4.614
+---
+`water.gro`
+> WATER
+>   400
+>     1W        W    1   0.084   3.595   3.359  0.0663  0.0148  0.2032
+>     2W        W    2   0.460   2.488   2.882  0.0999 -0.0648 -0.1661
+>     3W        W    3   3.165   2.218   0.652 -0.0881 -0.1237 -0.0896
+>     4W        W    4   3.295   3.303   2.679 -0.1486 -0.3229  0.1120
+>     5W        W    5   1.213   3.294   0.205 -0.1053 -0.1062  0.1014
+>     6W        W    6   1.296   1.446   1.188  0.0877 -0.0566 -0.1282
+>     7W        W    7   0.811   1.294   1.352  0.1967  0.2199  0.3289
+>   ……  
+>   399W        W  399   1.524   2.769   0.845 -0.5337  0.0559  0.0075
+>   400W        W  400   0.745   1.509   0.104  0.1616 -0.0161  0.1005
+>    3.64428   3.64428   3.64428
+---
+`waterbox.gro` 128 个脂质 + 加完水之后的体系
+```
+gmx solvate \
+  -cp 128_noW.gro \
+  -cs water.gro \
+  -o waterbox.gro \
+  -maxsol 768 \
+  -radius 0.21
+```
+> DPPC sim
+>  2304
+>     1DPPC   NC3    1   5.416   6.601   6.849
+>     1DPPC   PO4    2   5.553   6.364   6.737
+>     1DPPC   GL1    3   5.879   6.183   6.729
+>     1DPPC   GL2    4   5.830   6.066   6.486
+>     1DPPC   C1A    5   6.249   6.018   6.732
+>     1DPPC   C2A    6   6.418   5.797   6.662
+>     1DPPC   C3A    7   6.604   5.577   6.671
+>     1DPPC   C4A    8   6.855   5.351   6.605
+>   ……
+>   128DPPC   GL2 1528   3.769   0.584   5.461
+>   128DPPC   C1A 1529   3.312   0.758   5.451
+>   128DPPC   C2A 1530   3.154   0.700   5.219
+>   128DPPC   C3A 1531   2.966   0.715   5.001
+>   128DPPC   C4A 1532   2.726   0.648   4.763
+>   128DPPC   C1B 1533   3.699   0.502   5.150
+>   128DPPC   C2B 1534   3.437   0.323   5.054
+>   128DPPC   C3B 1535   3.259   0.364   4.787
+>   128DPPC   C4B 1536   2.975   0.228   4.614
+>   ……
+>   129W        W 1537   3.295   3.303   2.679
+>   130W        W 1538   0.811   1.294   1.352
+>   131W        W 1539   1.802   2.109   0.786
+>   891W        W 2299   5.584   5.363   6.334
+>   892W        W 2300   4.837   6.952   5.592
+>   893W        W 2301   6.643   5.907   5.132
+>   894W        W 2302   4.262   6.702   5.753
+>   895W        W 2303   5.283   4.754   6.963
+>   896W        W 2304   4.389   5.153   3.748
+>    7.50000   7.50000   7.50000
+> 
+
+### 3.Energy Minimization
+`minimization.mdp`
+`gmx mdrun -v -deffnm minimization`
+Steepest Descents converged to Fmax < 10 in 6627 steps
+### 4.NVT & NPT Equilibration
+### 5.MD Production 
+### 6. Analysis Methods
 。">
 <meta property="og:title" content="Coarse grained Molecular Simulation of LLPs on Dipeptide coacervates">
 <meta property="og:description" content="## Jan.16 meeting
@@ -43,7 +198,162 @@ Article 1<img width='1863' height='595' alt='Image' src='https://github.com/user
 ---
 ## 2. Detailed information 
 ### 2.1Research process of PArg/PAsp coacervates 
-- 
+
+
+
+
+
+## Martini Tutorial 1 Lipid Self-Assembly （object is DSPC）
+### 1.Generate Topology —— how to calculate the interaction & force between beads
+- Force Field parameters file:
+`martini_v3.0.0.itp`定义所有 Martini3 颗粒类型（bead types）和它们之间的非键相互作用
+`martini_v3.0.0_ffbonded_v2.itp`通用的“带键”参数库（angles、bonds、dihedrals 等）
+`martini_v3.0.0_phospholipids_PC_v2.itp`这里面包含了 DSPC 这一类 PC 头基磷脂的分子拓扑（[moleculetype]、[atoms]、[bonds]...）
+- topology file:
+`dspc.top`
+> #include 'martini_v3.0.0.itp' ; the particle definitions should be included first
+> #include 'martini_v3.0.0_ffbonded_v2.itp' ; the general lipid bonded definitions should be included second
+> #include 'martini_v3.0.0_phospholipids_PC_v2.itp' ; include water definitions here
+> 
+> [ system ]
+> ; This title is arbitrary (but something descriptive helps)
+> DSPC BILAYER SELF-ASSEMBLY
+> 
+> [ molecules ]
+> ; Molecule types and their numbers are written in the order
+> ; they appear in the structure file
+> DSPC 128
+> W 768  ;  
+**the whole system contains 768 water molecules and 128 DSPC molecules.**
+
+### 2.Define Box & Solvate
+- position
+> The first step is to create a simulation box containing a random configuration of 128  distearoyl-phosphatidylcholine (DSPC) lipids. This can be done by starting from a file containing a single DSPC molecule, which you can get from the [Martini 2 lipidome](https://cgmartini.nl/docs/downloads/force-field-parameters/martini2/lipidome.html#phosphatidylcholine-(pc)).
+---
+`DSPC-em.gro`
+> DPPC sim
+>    12
+>     1DPPC   NC3    1   0.485   0.515   2.472
+>     1DPPC   PO4    2   0.589   0.568   2.201
+>     1DPPC   GL1    3   0.509   0.536   1.838
+>     1DPPC   GL2    4   0.772   0.531   1.760
+>     1DPPC   C1A    5   0.396   0.476   1.453
+>     1DPPC   C2A    6   0.446   0.522   1.174
+>     1DPPC   C3A    7   0.421   0.596   0.897
+>     1DPPC   C4A    8   0.434   0.607   0.553
+>     1DPPC   C1B    9   0.922   0.644   1.490
+>     1DPPC   C2B   10   0.943   0.481   1.201
+>     1DPPC   C3B   11   0.926   0.607   0.904
+>     1DPPC   C4B   12   0.936   0.514   0.557
+>    3.00000   3.00000   3.00000
+---
+`128_noW.gro`
+```
+gmx insert-molecules \
+  -ci DPPC-em.gro \
+  -box 7.5 7.5 7.5 \
+  -nmol 128 \
+  -radius 0.21 \
+  -try 500 \
+  -o 128_noW.gro
+```
+
+>  DPPC sim
+>  1536
+>     1DPPC   NC3    1   5.416   6.601   6.849
+>     1DPPC   PO4    2   5.553   6.364   6.737
+>     1DPPC   GL1    3   5.879   6.183   6.729
+>     1DPPC   GL2    4   5.830   6.066   6.486
+>     1DPPC   C1A    5   6.249   6.018   6.732
+>     1DPPC   C2A    6   6.418   5.797   6.662
+>     1DPPC   C3A    7   6.604   5.577   6.671
+>     1DPPC   C4A    8   6.855   5.351   6.605
+>     1DPPC   C1B    9   5.917   5.774   6.363
+>     1DPPC   C2B   10   6.209   5.707   6.218
+>     1DPPC   C3B   11   6.380   5.434   6.241
+>     1DPPC   C4B   12   6.687   5.283   6.128
+>     2DPPC   NC3   13   7.321   2.765   6.253
+>     2DPPC   PO4   14   7.034   2.808   6.302
+>     2DPPC   GL1   15   6.722   2.948   6.152
+> ……
+>   127DPPC   C4B 1524   7.451   0.795  -0.253
+>   128DPPC   NC3 1525   4.122   0.913   6.058
+>   128DPPC   PO4 1526   4.003   0.824   5.803
+>   128DPPC   GL1 1527   3.680   0.790   5.619
+>   128DPPC   GL2 1528   3.769   0.584   5.461
+>   128DPPC   C1A 1529   3.312   0.758   5.451
+>   128DPPC   C2A 1530   3.154   0.700   5.219
+>   128DPPC   C3A 1531   2.966   0.715   5.001
+>   128DPPC   C4A 1532   2.726   0.648   4.763
+>   128DPPC   C1B 1533   3.699   0.502   5.150
+>   128DPPC   C2B 1534   3.437   0.323   5.054
+>   128DPPC   C3B 1535   3.259   0.364   4.787
+>   128DPPC   C4B 1536   2.975   0.228   4.614
+---
+`water.gro`
+> WATER
+>   400
+>     1W        W    1   0.084   3.595   3.359  0.0663  0.0148  0.2032
+>     2W        W    2   0.460   2.488   2.882  0.0999 -0.0648 -0.1661
+>     3W        W    3   3.165   2.218   0.652 -0.0881 -0.1237 -0.0896
+>     4W        W    4   3.295   3.303   2.679 -0.1486 -0.3229  0.1120
+>     5W        W    5   1.213   3.294   0.205 -0.1053 -0.1062  0.1014
+>     6W        W    6   1.296   1.446   1.188  0.0877 -0.0566 -0.1282
+>     7W        W    7   0.811   1.294   1.352  0.1967  0.2199  0.3289
+>   ……  
+>   399W        W  399   1.524   2.769   0.845 -0.5337  0.0559  0.0075
+>   400W        W  400   0.745   1.509   0.104  0.1616 -0.0161  0.1005
+>    3.64428   3.64428   3.64428
+---
+`waterbox.gro` 128 个脂质 + 加完水之后的体系
+```
+gmx solvate \
+  -cp 128_noW.gro \
+  -cs water.gro \
+  -o waterbox.gro \
+  -maxsol 768 \
+  -radius 0.21
+```
+> DPPC sim
+>  2304
+>     1DPPC   NC3    1   5.416   6.601   6.849
+>     1DPPC   PO4    2   5.553   6.364   6.737
+>     1DPPC   GL1    3   5.879   6.183   6.729
+>     1DPPC   GL2    4   5.830   6.066   6.486
+>     1DPPC   C1A    5   6.249   6.018   6.732
+>     1DPPC   C2A    6   6.418   5.797   6.662
+>     1DPPC   C3A    7   6.604   5.577   6.671
+>     1DPPC   C4A    8   6.855   5.351   6.605
+>   ……
+>   128DPPC   GL2 1528   3.769   0.584   5.461
+>   128DPPC   C1A 1529   3.312   0.758   5.451
+>   128DPPC   C2A 1530   3.154   0.700   5.219
+>   128DPPC   C3A 1531   2.966   0.715   5.001
+>   128DPPC   C4A 1532   2.726   0.648   4.763
+>   128DPPC   C1B 1533   3.699   0.502   5.150
+>   128DPPC   C2B 1534   3.437   0.323   5.054
+>   128DPPC   C3B 1535   3.259   0.364   4.787
+>   128DPPC   C4B 1536   2.975   0.228   4.614
+>   ……
+>   129W        W 1537   3.295   3.303   2.679
+>   130W        W 1538   0.811   1.294   1.352
+>   131W        W 1539   1.802   2.109   0.786
+>   891W        W 2299   5.584   5.363   6.334
+>   892W        W 2300   4.837   6.952   5.592
+>   893W        W 2301   6.643   5.907   5.132
+>   894W        W 2302   4.262   6.702   5.753
+>   895W        W 2303   5.283   4.754   6.963
+>   896W        W 2304   4.389   5.153   3.748
+>    7.50000   7.50000   7.50000
+> 
+
+### 3.Energy Minimization
+`minimization.mdp`
+`gmx mdrun -v -deffnm minimization`
+Steepest Descents converged to Fmax < 10 in 6627 steps
+### 4.NVT & NPT Equilibration
+### 5.MD Production 
+### 6. Analysis Methods
 。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://Kyrie11Du.github.io/KAI-life.github.io/post/Coarse%20grained%20Molecular%20Simulation%20of%20LLPs%20on%20Dipeptide%20coacervates.html">
@@ -73,7 +383,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 
 
@@ -128,9 +448,165 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h2>2. Detailed information</h2>
 <h3>2.1Research process of PArg/PAsp coacervates</h3>
+<h2>Martini Tutorial 1 Lipid Self-Assembly （object is DSPC）</h2>
+<h3>1.Generate Topology —— how to calculate the interaction &amp; force between beads</h3>
 <ul>
-<li></li>
-</ul></div>
+<li>Force Field parameters file:<br>
+<code class="notranslate">martini_v3.0.0.itp</code>定义所有 Martini3 颗粒类型（bead types）和它们之间的非键相互作用<br>
+<code class="notranslate">martini_v3.0.0_ffbonded_v2.itp</code>通用的“带键”参数库（angles、bonds、dihedrals 等）<br>
+<code class="notranslate">martini_v3.0.0_phospholipids_PC_v2.itp</code>这里面包含了 DSPC 这一类 PC 头基磷脂的分子拓扑（[moleculetype]、[atoms]、[bonds]...）</li>
+<li>topology file:<br>
+<code class="notranslate">dspc.top</code></li>
+</ul>
+<blockquote>
+<p>#include "martini_v3.0.0.itp" ; the particle definitions should be included first<br>
+#include "martini_v3.0.0_ffbonded_v2.itp" ; the general lipid bonded definitions should be included second<br>
+#include "martini_v3.0.0_phospholipids_PC_v2.itp" ; include water definitions here</p>
+<p>[ system ]<br>
+; This title is arbitrary (but something descriptive helps)<br>
+DSPC BILAYER SELF-ASSEMBLY</p>
+<p>[ molecules ]<br>
+; Molecule types and their numbers are written in the order<br>
+; they appear in the structure file<br>
+DSPC 128<br>
+W 768  ;<br>
+<strong>the whole system contains 768 water molecules and 128 DSPC molecules.</strong></p>
+</blockquote>
+<h3>2.Define Box &amp; Solvate</h3>
+<ul>
+<li>position</li>
+</ul>
+<blockquote>
+<p>The first step is to create a simulation box containing a random configuration of 128  distearoyl-phosphatidylcholine (DSPC) lipids. This can be done by starting from a file containing a single DSPC molecule, which you can get from the <a href="https://cgmartini.nl/docs/downloads/force-field-parameters/martini2/lipidome.html#phosphatidylcholine-(pc)" rel="nofollow">Martini 2 lipidome</a>.</p>
+</blockquote>
+<hr>
+<p><code class="notranslate">DSPC-em.gro</code></p>
+<blockquote>
+<p>DPPC sim<br>
+12<br>
+1DPPC   NC3    1   0.485   0.515   2.472<br>
+1DPPC   PO4    2   0.589   0.568   2.201<br>
+1DPPC   GL1    3   0.509   0.536   1.838<br>
+1DPPC   GL2    4   0.772   0.531   1.760<br>
+1DPPC   C1A    5   0.396   0.476   1.453<br>
+1DPPC   C2A    6   0.446   0.522   1.174<br>
+1DPPC   C3A    7   0.421   0.596   0.897<br>
+1DPPC   C4A    8   0.434   0.607   0.553<br>
+1DPPC   C1B    9   0.922   0.644   1.490<br>
+1DPPC   C2B   10   0.943   0.481   1.201<br>
+1DPPC   C3B   11   0.926   0.607   0.904<br>
+1DPPC   C4B   12   0.936   0.514   0.557<br>
+3.00000   3.00000   3.00000</p>
+</blockquote>
+<hr>
+<p><code class="notranslate">128_noW.gro</code></p>
+<pre class="notranslate"><code class="notranslate">gmx insert-molecules \
+  -ci DPPC-em.gro \
+  -box 7.5 7.5 7.5 \
+  -nmol 128 \
+  -radius 0.21 \
+  -try 500 \
+  -o 128_noW.gro
+</code></pre>
+<blockquote>
+<p>DPPC sim<br>
+1536<br>
+1DPPC   NC3    1   5.416   6.601   6.849<br>
+1DPPC   PO4    2   5.553   6.364   6.737<br>
+1DPPC   GL1    3   5.879   6.183   6.729<br>
+1DPPC   GL2    4   5.830   6.066   6.486<br>
+1DPPC   C1A    5   6.249   6.018   6.732<br>
+1DPPC   C2A    6   6.418   5.797   6.662<br>
+1DPPC   C3A    7   6.604   5.577   6.671<br>
+1DPPC   C4A    8   6.855   5.351   6.605<br>
+1DPPC   C1B    9   5.917   5.774   6.363<br>
+1DPPC   C2B   10   6.209   5.707   6.218<br>
+1DPPC   C3B   11   6.380   5.434   6.241<br>
+1DPPC   C4B   12   6.687   5.283   6.128<br>
+2DPPC   NC3   13   7.321   2.765   6.253<br>
+2DPPC   PO4   14   7.034   2.808   6.302<br>
+2DPPC   GL1   15   6.722   2.948   6.152<br>
+……<br>
+127DPPC   C4B 1524   7.451   0.795  -0.253<br>
+128DPPC   NC3 1525   4.122   0.913   6.058<br>
+128DPPC   PO4 1526   4.003   0.824   5.803<br>
+128DPPC   GL1 1527   3.680   0.790   5.619<br>
+128DPPC   GL2 1528   3.769   0.584   5.461<br>
+128DPPC   C1A 1529   3.312   0.758   5.451<br>
+128DPPC   C2A 1530   3.154   0.700   5.219<br>
+128DPPC   C3A 1531   2.966   0.715   5.001<br>
+128DPPC   C4A 1532   2.726   0.648   4.763<br>
+128DPPC   C1B 1533   3.699   0.502   5.150<br>
+128DPPC   C2B 1534   3.437   0.323   5.054<br>
+128DPPC   C3B 1535   3.259   0.364   4.787<br>
+128DPPC   C4B 1536   2.975   0.228   4.614</p>
+</blockquote>
+<hr>
+<p><code class="notranslate">water.gro</code></p>
+<blockquote>
+<p>WATER<br>
+400<br>
+1W        W    1   0.084   3.595   3.359  0.0663  0.0148  0.2032<br>
+2W        W    2   0.460   2.488   2.882  0.0999 -0.0648 -0.1661<br>
+3W        W    3   3.165   2.218   0.652 -0.0881 -0.1237 -0.0896<br>
+4W        W    4   3.295   3.303   2.679 -0.1486 -0.3229  0.1120<br>
+5W        W    5   1.213   3.294   0.205 -0.1053 -0.1062  0.1014<br>
+6W        W    6   1.296   1.446   1.188  0.0877 -0.0566 -0.1282<br>
+7W        W    7   0.811   1.294   1.352  0.1967  0.2199  0.3289<br>
+……<br>
+399W        W  399   1.524   2.769   0.845 -0.5337  0.0559  0.0075<br>
+400W        W  400   0.745   1.509   0.104  0.1616 -0.0161  0.1005<br>
+3.64428   3.64428   3.64428</p>
+</blockquote>
+<hr>
+<p><code class="notranslate">waterbox.gro</code> 128 个脂质 + 加完水之后的体系</p>
+<pre class="notranslate"><code class="notranslate">gmx solvate \
+  -cp 128_noW.gro \
+  -cs water.gro \
+  -o waterbox.gro \
+  -maxsol 768 \
+  -radius 0.21
+</code></pre>
+<blockquote>
+<p>DPPC sim<br>
+2304<br>
+1DPPC   NC3    1   5.416   6.601   6.849<br>
+1DPPC   PO4    2   5.553   6.364   6.737<br>
+1DPPC   GL1    3   5.879   6.183   6.729<br>
+1DPPC   GL2    4   5.830   6.066   6.486<br>
+1DPPC   C1A    5   6.249   6.018   6.732<br>
+1DPPC   C2A    6   6.418   5.797   6.662<br>
+1DPPC   C3A    7   6.604   5.577   6.671<br>
+1DPPC   C4A    8   6.855   5.351   6.605<br>
+……<br>
+128DPPC   GL2 1528   3.769   0.584   5.461<br>
+128DPPC   C1A 1529   3.312   0.758   5.451<br>
+128DPPC   C2A 1530   3.154   0.700   5.219<br>
+128DPPC   C3A 1531   2.966   0.715   5.001<br>
+128DPPC   C4A 1532   2.726   0.648   4.763<br>
+128DPPC   C1B 1533   3.699   0.502   5.150<br>
+128DPPC   C2B 1534   3.437   0.323   5.054<br>
+128DPPC   C3B 1535   3.259   0.364   4.787<br>
+128DPPC   C4B 1536   2.975   0.228   4.614<br>
+……<br>
+129W        W 1537   3.295   3.303   2.679<br>
+130W        W 1538   0.811   1.294   1.352<br>
+131W        W 1539   1.802   2.109   0.786<br>
+891W        W 2299   5.584   5.363   6.334<br>
+892W        W 2300   4.837   6.952   5.592<br>
+893W        W 2301   6.643   5.907   5.132<br>
+894W        W 2302   4.262   6.702   5.753<br>
+895W        W 2303   5.283   4.754   6.963<br>
+896W        W 2304   4.389   5.153   3.748<br>
+7.50000   7.50000   7.50000</p>
+</blockquote>
+<h3>3.Energy Minimization</h3>
+<p><code class="notranslate">minimization.mdp</code><br>
+<code class="notranslate">gmx mdrun -v -deffnm minimization</code><br>
+Steepest Descents converged to Fmax &lt; 10 in 6627 steps</p>
+<h3>4.NVT &amp; NPT Equilibration</h3>
+<h3>5.MD Production</h3>
+<h3>6. Analysis Methods</h3></div>
 <div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
 
 </div>
@@ -152,7 +628,7 @@ if("09/04/2025"!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -190,7 +666,70 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 

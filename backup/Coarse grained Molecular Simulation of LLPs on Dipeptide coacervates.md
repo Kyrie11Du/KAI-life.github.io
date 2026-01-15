@@ -42,8 +42,9 @@ Article 1<img width="1863" height="595" alt="Image" src="https://github.com/user
 **the whole system contains 768 water molecules and 128 DSPC molecules.**
 
 ### 2.Define Box & Solvate
-- position
+- position / coordinates for all molecules in the system 
 > The first step is to create a simulation box containing a random configuration of 128  distearoyl-phosphatidylcholine (DSPC) lipids. This can be done by starting from a file containing a single DSPC molecule, which you can get from the [Martini 2 lipidome](https://cgmartini.nl/docs/downloads/force-field-parameters/martini2/lipidome.html#phosphatidylcholine-(pc)).
+
 ---
 `DSPC-em.gro`
 > DPPC sim
@@ -120,7 +121,7 @@ gmx insert-molecules \
 >   400W        W  400   0.745   1.509   0.104  0.1616 -0.0161  0.1005
 >    3.64428   3.64428   3.64428
 ---
-`waterbox.gro` 128 个脂质 + 加完水之后的体系
+`waterbox.gro` 128 DPPC+ water as solvent 
 ```
 gmx solvate \
   -cp 128_noW.gro \
@@ -153,6 +154,7 @@ gmx solvate \
 >   129W        W 1537   3.295   3.303   2.679
 >   130W        W 1538   0.811   1.294   1.352
 >   131W        W 1539   1.802   2.109   0.786
+>       ……
 >   891W        W 2299   5.584   5.363   6.334
 >   892W        W 2300   4.837   6.952   5.592
 >   893W        W 2301   6.643   5.907   5.132
@@ -163,9 +165,45 @@ gmx solvate \
 > 
 
 ### 3.Energy Minimization
-`minimization.mdp`
-`gmx mdrun -v -deffnm minimization`
-Steepest Descents converged to Fmax < 10 in 6627 steps
+- 
+
+> Now you will perform an energy minimization of the solvated system, to get rid of high forces between beads that may have been placed too close to each other. The settings file minimization.mdp is provided for you, but you will need the topology for water and for the DSPC lipid, and to organize them as a .top file. 
+
+`minimization.mdp` were used for
+
+> ; Energy minimization
+> integrator  = steep
+> emtol       = 100.0
+> emstep      = 0.01
+> nsteps      = 50000
+> nstlist     = 10
+> cutoff-scheme = Verlet
+> coulombtype = PME
+> rcoulomb    = 1.0
+> rvdw        = 1.0
+> energygrps  = system
+
+---
+`dspc-min-solvent.tpr`
+```
+gmx grompp \
+  -f minimization.mdp \
+  -c waterbox.gro \
+  -p dspc.top \
+  -o dspc-min-solvent.tpr
+
+```
+---
+`minimized.gro` This files is where we start our MD.
+```
+gmx mdrun \
+  -s dspc-min-solvent.tpr \
+  -v \
+  -c minimized.gro
+```
+- stop when Fmax is lower than some certain value（e.g. < 10 kJ/mol/nm) by steepest descents algorthm.
+> Steepest Descents converged to Fmax < 10 in 6627 steps
+
 ### 4.NVT & NPT Equilibration
 ### 5.MD Production 
 ### 6. Analysis Methods

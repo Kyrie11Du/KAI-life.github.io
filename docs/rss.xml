@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Kyire's Blog</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link><description> If you want to find the secrets of the universe, think in terms of energy,frequency and vibration</description><copyright>Kyire's Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/103874291?v=4</url><title>avatar</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link></image><lastBuildDate>Thu, 15 Jan 2026 16:10:35 +0000</lastBuildDate><managingEditor>Kyire's Blog</managingEditor><ttl>60</ttl><webMaster>Kyire's Blog</webMaster><item><title>Coarse grained Molecular Simulation of LLPs on Dipeptide coacervates</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/Coarse%20grained%20Molecular%20Simulation%20of%20LLPs%20on%20Dipeptide%20coacervates.html</link><description>## Jan.16 meeting
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Kyire's Blog</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link><description> If you want to find the secrets of the universe, think in terms of energy,frequency and vibration</description><copyright>Kyire's Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/103874291?v=4</url><title>avatar</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link></image><lastBuildDate>Thu, 15 Jan 2026 16:56:02 +0000</lastBuildDate><managingEditor>Kyire's Blog</managingEditor><ttl>60</ttl><webMaster>Kyire's Blog</webMaster><item><title>Coarse grained Molecular Simulation of LLPs on Dipeptide coacervates</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/Coarse%20grained%20Molecular%20Simulation%20of%20LLPs%20on%20Dipeptide%20coacervates.html</link><description>## Jan.16 meeting
 
 Article 1&lt;img width='1863' height='595' alt='Image' src='https://github.com/user-attachments/assets/b7b452d9-a55e-4a4b-b59b-e79aab9845c8' /&gt;
 ---
@@ -166,11 +166,10 @@ gmx solvate \
 &gt; 
 
 ### 3.Energy Minimization
-- 
-
+- purpose from martini tutorial
 &gt; Now you will perform an energy minimization of the solvated system, to get rid of high forces between beads that may have been placed too close to each other. The settings file minimization.mdp is provided for you, but you will need the topology for water and for the DSPC lipid, and to organize them as a .top file. 
 
-`minimization.mdp` were used for
+`minimization.mdp` file were used for setting all parameters for energy minimization
 
 &gt; ; Energy minimization
 &gt; integrator  = steep
@@ -206,7 +205,77 @@ gmx mdrun \
 &gt; Steepest Descents converged to Fmax &lt; 10 in 6627 steps
 
 ### 4.NVT &amp; NPT Equilibration
+`martini_md.mdp`
+
+&gt; integrator               = md
+&gt; dt                       = 0.02
+&gt; nsteps                   = 1500000
+&gt; 
+&gt; ; Center of mass removal
+&gt; comm-mode                = Linear
+&gt; nstcomm                  = 100
+&gt; comm-grps                = System
+&gt; 
+&gt; nstxout                  = 0
+&gt; nstvout                  = 0
+&gt; nstfout                  = 0
+&gt; nstlog                   = 10000
+&gt; nstenergy                = 1000
+&gt; nstxout-compressed       = 1000
+&gt; compressed-x-precision   = 100
+&gt; compressed-x-grps        =
+&gt; energygrps               = System
+&gt; 
+&gt; cutoff-scheme            = Verlet
+&gt; nstlist                  = 20
+&gt; nsttcouple               = 20
+&gt; nstpcouple               = 20
+&gt; rlist                    = 1.35
+&gt; verlet-buffer-tolerance  = -1
+&gt; ns_type                  = grid
+&gt; pbc                      = xyz
+&gt; 
+&gt; coulombtype              = reaction-field
+&gt; rcoulomb                 = 1.1
+&gt; epsilon_r                = 15	; 2.5 (with polarizable water)
+&gt; epsilon_rf               = 0
+&gt; vdw_type                 = cutoff
+&gt; vdw-modifier             = Potential-shift-verlet
+&gt; rvdw                     = 1.1
+&gt; 
+&gt; tcoupl                   = v-rescale
+&gt; tc-grps                  = System
+&gt; tau_t                    = 1.0
+&gt; ref_t                    = 340
+&gt; 
+&gt; gen_vel                  = yes
+&gt; gen_temp                 = 340
+&gt; gen_seed                 = -1
+&gt; 
+&gt; ; Pressure coupling     
+&gt; Pcoupl                   = Berendsen
+&gt; Pcoupltype               = isotropic
+&gt; tau_p                    = 4.0 
+&gt; ref_p                    = 1.0
+&gt; compressibility          = 3e-4 
+&gt; 
+&gt; constraints              = none
+&gt; constraint_algorithm     = Lincs
+&gt; lincs_order              = 8
+&gt; lincs_warnangle          = 90
+&gt; lincs_iter               = 2
+
 ### 5.MD Production 
+1 .`dspc-md.tpr`
+```
+gmx grompp \
+  -f martini_md.mdp \
+  -c minimized.gro \
+  -p dspc.top \
+  -o dspc-md.tpr
+```
+2. `gmx mdrun -deffnm dspc-md -v`
+
 ### 6. Analysis Methods
 。</description><guid isPermaLink="true">https://Kyrie11Du.github.io/KAI-life.github.io/post/Coarse%20grained%20Molecular%20Simulation%20of%20LLPs%20on%20Dipeptide%20coacervates.html</guid><pubDate>Wed, 14 Jan 2026 09:04:26 +0000</pubDate></item><item><title>PHDapplication</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/PHDapplication.html</link><description>### MPI-Polymer （https://www.mpip-mainz.mpg.de/en/kremer/groups/andrienko）
 - CsPbBr3 Nanocrystal LEDs: The Role of Alkyl Ligands and Polar Electron Transport Layers. Advanced Optical Materials 13 (28), e01361 (2025)

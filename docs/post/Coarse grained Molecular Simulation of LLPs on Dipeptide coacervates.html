@@ -177,11 +177,10 @@ gmx solvate \
 > 
 
 ### 3.Energy Minimization
-- 
-
+- purpose from martini tutorial
 > Now you will perform an energy minimization of the solvated system, to get rid of high forces between beads that may have been placed too close to each other. The settings file minimization.mdp is provided for you, but you will need the topology for water and for the DSPC lipid, and to organize them as a .top file. 
 
-`minimization.mdp` were used for
+`minimization.mdp` file were used for setting all parameters for energy minimization
 
 > ; Energy minimization
 > integrator  = steep
@@ -217,7 +216,77 @@ gmx mdrun \
 > Steepest Descents converged to Fmax < 10 in 6627 steps
 
 ### 4.NVT & NPT Equilibration
+`martini_md.mdp`
+
+> integrator               = md
+> dt                       = 0.02
+> nsteps                   = 1500000
+> 
+> ; Center of mass removal
+> comm-mode                = Linear
+> nstcomm                  = 100
+> comm-grps                = System
+> 
+> nstxout                  = 0
+> nstvout                  = 0
+> nstfout                  = 0
+> nstlog                   = 10000
+> nstenergy                = 1000
+> nstxout-compressed       = 1000
+> compressed-x-precision   = 100
+> compressed-x-grps        =
+> energygrps               = System
+> 
+> cutoff-scheme            = Verlet
+> nstlist                  = 20
+> nsttcouple               = 20
+> nstpcouple               = 20
+> rlist                    = 1.35
+> verlet-buffer-tolerance  = -1
+> ns_type                  = grid
+> pbc                      = xyz
+> 
+> coulombtype              = reaction-field
+> rcoulomb                 = 1.1
+> epsilon_r                = 15	; 2.5 (with polarizable water)
+> epsilon_rf               = 0
+> vdw_type                 = cutoff
+> vdw-modifier             = Potential-shift-verlet
+> rvdw                     = 1.1
+> 
+> tcoupl                   = v-rescale
+> tc-grps                  = System
+> tau_t                    = 1.0
+> ref_t                    = 340
+> 
+> gen_vel                  = yes
+> gen_temp                 = 340
+> gen_seed                 = -1
+> 
+> ; Pressure coupling     
+> Pcoupl                   = Berendsen
+> Pcoupltype               = isotropic
+> tau_p                    = 4.0 
+> ref_p                    = 1.0
+> compressibility          = 3e-4 
+> 
+> constraints              = none
+> constraint_algorithm     = Lincs
+> lincs_order              = 8
+> lincs_warnangle          = 90
+> lincs_iter               = 2
+
 ### 5.MD Production 
+1 .`dspc-md.tpr`
+```
+gmx grompp \
+  -f martini_md.mdp \
+  -c minimized.gro \
+  -p dspc.top \
+  -o dspc-md.tpr
+```
+2. `gmx mdrun -deffnm dspc-md -v`
+
 ### 6. Analysis Methods
 。">
 <meta property="og:title" content="Coarse grained Molecular Simulation of LLPs on Dipeptide coacervates">
@@ -388,11 +457,10 @@ gmx solvate \
 > 
 
 ### 3.Energy Minimization
-- 
-
+- purpose from martini tutorial
 > Now you will perform an energy minimization of the solvated system, to get rid of high forces between beads that may have been placed too close to each other. The settings file minimization.mdp is provided for you, but you will need the topology for water and for the DSPC lipid, and to organize them as a .top file. 
 
-`minimization.mdp` were used for
+`minimization.mdp` file were used for setting all parameters for energy minimization
 
 > ; Energy minimization
 > integrator  = steep
@@ -428,7 +496,77 @@ gmx mdrun \
 > Steepest Descents converged to Fmax < 10 in 6627 steps
 
 ### 4.NVT & NPT Equilibration
+`martini_md.mdp`
+
+> integrator               = md
+> dt                       = 0.02
+> nsteps                   = 1500000
+> 
+> ; Center of mass removal
+> comm-mode                = Linear
+> nstcomm                  = 100
+> comm-grps                = System
+> 
+> nstxout                  = 0
+> nstvout                  = 0
+> nstfout                  = 0
+> nstlog                   = 10000
+> nstenergy                = 1000
+> nstxout-compressed       = 1000
+> compressed-x-precision   = 100
+> compressed-x-grps        =
+> energygrps               = System
+> 
+> cutoff-scheme            = Verlet
+> nstlist                  = 20
+> nsttcouple               = 20
+> nstpcouple               = 20
+> rlist                    = 1.35
+> verlet-buffer-tolerance  = -1
+> ns_type                  = grid
+> pbc                      = xyz
+> 
+> coulombtype              = reaction-field
+> rcoulomb                 = 1.1
+> epsilon_r                = 15	; 2.5 (with polarizable water)
+> epsilon_rf               = 0
+> vdw_type                 = cutoff
+> vdw-modifier             = Potential-shift-verlet
+> rvdw                     = 1.1
+> 
+> tcoupl                   = v-rescale
+> tc-grps                  = System
+> tau_t                    = 1.0
+> ref_t                    = 340
+> 
+> gen_vel                  = yes
+> gen_temp                 = 340
+> gen_seed                 = -1
+> 
+> ; Pressure coupling     
+> Pcoupl                   = Berendsen
+> Pcoupltype               = isotropic
+> tau_p                    = 4.0 
+> ref_p                    = 1.0
+> compressibility          = 3e-4 
+> 
+> constraints              = none
+> constraint_algorithm     = Lincs
+> lincs_order              = 8
+> lincs_warnangle          = 90
+> lincs_iter               = 2
+
 ### 5.MD Production 
+1 .`dspc-md.tpr`
+```
+gmx grompp \
+  -f martini_md.mdp \
+  -c minimized.gro \
+  -p dspc.top \
+  -o dspc-md.tpr
+```
+2. `gmx mdrun -deffnm dspc-md -v`
+
 ### 6. Analysis Methods
 。">
 <meta property="og:type" content="article">
@@ -679,12 +817,12 @@ W 768  ;<br>
 </blockquote>
 <h3>3.Energy Minimization</h3>
 <ul>
-<li></li>
+<li>purpose from martini tutorial</li>
 </ul>
 <blockquote>
 <p>Now you will perform an energy minimization of the solvated system, to get rid of high forces between beads that may have been placed too close to each other. The settings file minimization.mdp is provided for you, but you will need the topology for water and for the DSPC lipid, and to organize them as a .top file.</p>
 </blockquote>
-<p><code class="notranslate">minimization.mdp</code> were used for</p>
+<p><code class="notranslate">minimization.mdp</code> file were used for setting all parameters for energy minimization</p>
 <blockquote>
 <p>; Energy minimization<br>
 integrator  = steep<br>
@@ -721,7 +859,69 @@ energygrps  = system</p>
 <p>Steepest Descents converged to Fmax &lt; 10 in 6627 steps</p>
 </blockquote>
 <h3>4.NVT &amp; NPT Equilibration</h3>
+<p><code class="notranslate">martini_md.mdp</code></p>
+<blockquote>
+<p>integrator               = md<br>
+dt                       = 0.02<br>
+nsteps                   = 1500000</p>
+<p>; Center of mass removal<br>
+comm-mode                = Linear<br>
+nstcomm                  = 100<br>
+comm-grps                = System</p>
+<p>nstxout                  = 0<br>
+nstvout                  = 0<br>
+nstfout                  = 0<br>
+nstlog                   = 10000<br>
+nstenergy                = 1000<br>
+nstxout-compressed       = 1000<br>
+compressed-x-precision   = 100<br>
+compressed-x-grps        =<br>
+energygrps               = System</p>
+<p>cutoff-scheme            = Verlet<br>
+nstlist                  = 20<br>
+nsttcouple               = 20<br>
+nstpcouple               = 20<br>
+rlist                    = 1.35<br>
+verlet-buffer-tolerance  = -1<br>
+ns_type                  = grid<br>
+pbc                      = xyz</p>
+<p>coulombtype              = reaction-field<br>
+rcoulomb                 = 1.1<br>
+epsilon_r                = 15	; 2.5 (with polarizable water)<br>
+epsilon_rf               = 0<br>
+vdw_type                 = cutoff<br>
+vdw-modifier             = Potential-shift-verlet<br>
+rvdw                     = 1.1</p>
+<p>tcoupl                   = v-rescale<br>
+tc-grps                  = System<br>
+tau_t                    = 1.0<br>
+ref_t                    = 340</p>
+<p>gen_vel                  = yes<br>
+gen_temp                 = 340<br>
+gen_seed                 = -1</p>
+<p>; Pressure coupling<br>
+Pcoupl                   = Berendsen<br>
+Pcoupltype               = isotropic<br>
+tau_p                    = 4.0<br>
+ref_p                    = 1.0<br>
+compressibility          = 3e-4</p>
+<p>constraints              = none<br>
+constraint_algorithm     = Lincs<br>
+lincs_order              = 8<br>
+lincs_warnangle          = 90<br>
+lincs_iter               = 2</p>
+</blockquote>
 <h3>5.MD Production</h3>
+<p>1 .<code class="notranslate">dspc-md.tpr</code></p>
+<pre class="notranslate"><code class="notranslate">gmx grompp \
+  -f martini_md.mdp \
+  -c minimized.gro \
+  -p dspc.top \
+  -o dspc-md.tpr
+</code></pre>
+<ol start="2">
+<li><code class="notranslate">gmx mdrun -deffnm dspc-md -v</code></li>
+</ol>
 <h3>6. Analysis Methods</h3></div>
 <div style="font-size:small;margin-top:8px;float:right;">转载请注明出处</div>
 

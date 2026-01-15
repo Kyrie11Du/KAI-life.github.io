@@ -165,11 +165,10 @@ gmx solvate \
 > 
 
 ### 3.Energy Minimization
-- 
-
+- purpose from martini tutorial
 > Now you will perform an energy minimization of the solvated system, to get rid of high forces between beads that may have been placed too close to each other. The settings file minimization.mdp is provided for you, but you will need the topology for water and for the DSPC lipid, and to organize them as a .top file. 
 
-`minimization.mdp` were used for
+`minimization.mdp` file were used for setting all parameters for energy minimization
 
 > ; Energy minimization
 > integrator  = steep
@@ -205,5 +204,75 @@ gmx mdrun \
 > Steepest Descents converged to Fmax < 10 in 6627 steps
 
 ### 4.NVT & NPT Equilibration
+`martini_md.mdp`
+
+> integrator               = md
+> dt                       = 0.02
+> nsteps                   = 1500000
+> 
+> ; Center of mass removal
+> comm-mode                = Linear
+> nstcomm                  = 100
+> comm-grps                = System
+> 
+> nstxout                  = 0
+> nstvout                  = 0
+> nstfout                  = 0
+> nstlog                   = 10000
+> nstenergy                = 1000
+> nstxout-compressed       = 1000
+> compressed-x-precision   = 100
+> compressed-x-grps        =
+> energygrps               = System
+> 
+> cutoff-scheme            = Verlet
+> nstlist                  = 20
+> nsttcouple               = 20
+> nstpcouple               = 20
+> rlist                    = 1.35
+> verlet-buffer-tolerance  = -1
+> ns_type                  = grid
+> pbc                      = xyz
+> 
+> coulombtype              = reaction-field
+> rcoulomb                 = 1.1
+> epsilon_r                = 15	; 2.5 (with polarizable water)
+> epsilon_rf               = 0
+> vdw_type                 = cutoff
+> vdw-modifier             = Potential-shift-verlet
+> rvdw                     = 1.1
+> 
+> tcoupl                   = v-rescale
+> tc-grps                  = System
+> tau_t                    = 1.0
+> ref_t                    = 340
+> 
+> gen_vel                  = yes
+> gen_temp                 = 340
+> gen_seed                 = -1
+> 
+> ; Pressure coupling     
+> Pcoupl                   = Berendsen
+> Pcoupltype               = isotropic
+> tau_p                    = 4.0 
+> ref_p                    = 1.0
+> compressibility          = 3e-4 
+> 
+> constraints              = none
+> constraint_algorithm     = Lincs
+> lincs_order              = 8
+> lincs_warnangle          = 90
+> lincs_iter               = 2
+
 ### 5.MD Production 
+1 .`dspc-md.tpr`
+```
+gmx grompp \
+  -f martini_md.mdp \
+  -c minimized.gro \
+  -p dspc.top \
+  -o dspc-md.tpr
+```
+2. `gmx mdrun -deffnm dspc-md -v`
+
 ### 6. Analysis Methods

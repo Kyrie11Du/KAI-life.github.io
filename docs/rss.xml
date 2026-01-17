@@ -1,5 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Kyire's Blog</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link><description> If you want to find the secrets of the universe, think in terms of energy,frequency and vibration</description><copyright>Kyire's Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/103874291?v=4</url><title>avatar</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link></image><lastBuildDate>Thu, 15 Jan 2026 16:56:02 +0000</lastBuildDate><managingEditor>Kyire's Blog</managingEditor><ttl>60</ttl><webMaster>Kyire's Blog</webMaster><item><title>Coarse grained Molecular Simulation of LLPs on Dipeptide coacervates</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/Coarse%20grained%20Molecular%20Simulation%20of%20LLPs%20on%20Dipeptide%20coacervates.html</link><description>## Jan.16 meeting
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Kyire's Blog</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link><description> If you want to find the secrets of the universe, think in terms of energy,frequency and vibration</description><copyright>Kyire's Blog</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/103874291?v=4</url><title>avatar</title><link>https://Kyrie11Du.github.io/KAI-life.github.io</link></image><lastBuildDate>Sat, 17 Jan 2026 06:55:44 +0000</lastBuildDate><managingEditor>Kyire's Blog</managingEditor><ttl>60</ttl><webMaster>Kyire's Blog</webMaster><item><title>Semiconductor Physics</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/Semiconductor%20Physics.html</link><description>## Group Theory 群论
+- D3 群
+
+|   | e | d | f | a | b | c |    
+|---|---|---|---|---|---|---|
+| e | e | d | f | a | b | c |
+| d | d | f | e | c | a | b |
+| f | f | e | d | b | c | a |
+| a | a | b | c | e | d | f |
+| b | b | c | a | f | e | d |
+| c | c | a | b | d | f | e |
+- `e` self/恒等元
+-  阿贝尔群满足乘法交换律，不必区分左乘或右乘
+- 子群的引入——一个大的对称性中必然可能包含小的对称性——从一个群中取出满足群的4条性质且乘法性质不变的元素构成一个子群
+- 如果一个群有子群，那么这个群的乘法表中必然包含子群的乘法表（e.g.如下）
+|   | e | d | f |
+|---|---|---|---|
+| e | e | d | f | 
+| d | d | f | e | 
+| f | f | e | d | 
+- D3群有4个真子群（除了e,G非平凡子群外的子群都叫真子群）。</description><guid isPermaLink="true">https://Kyrie11Du.github.io/KAI-life.github.io/post/Semiconductor%20Physics.html</guid><pubDate>Sat, 17 Jan 2026 06:55:14 +0000</pubDate></item><item><title>Coarse grained Molecular Simulation of LLPs on Dipeptide coacervates</title><link>https://Kyrie11Du.github.io/KAI-life.github.io/post/Coarse%20grained%20Molecular%20Simulation%20of%20LLPs%20on%20Dipeptide%20coacervates.html</link><description>## Jan.16 meeting
 
 Article 1&lt;img width='1863' height='595' alt='Image' src='https://github.com/user-attachments/assets/b7b452d9-a55e-4a4b-b59b-e79aab9845c8' /&gt;
 ---

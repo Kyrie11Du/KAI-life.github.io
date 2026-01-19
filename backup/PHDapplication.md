@@ -25,4 +25,7 @@
 
 ### 4. Dr. Yingke Wu（https://sites.mpip-mainz.mpg.de/206248/Research）
 - email: wuyingke@mpip-mainz.mpg.de
-- 
+attached
+- [ ] CV
+
+- [ ]  motivation letter

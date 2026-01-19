@@ -1,4 +1,5 @@
-### MPI-Polymer （https://www.mpip-mainz.mpg.de/en/kremer/groups/andrienko）
+## MPI-Polymer 
+### 1.Dr. Denis Andrienko（https://www.mpip-mainz.mpg.de/en/kremer/groups/andrienko）
 - CsPbBr3 Nanocrystal LEDs: The Role of Alkyl Ligands and Polar Electron Transport Layers. Advanced Optical Materials 13 (28), e01361 (2025)
 - Charge carrier transport in two-dimensional benzimidazole-based perovskites. Materials Horizons 12 (17), pp. 6812 - 6821 (2025)
 - Discerning Performance Bottlenecks of State-of-the-Art Narrow Bandgap Organic Solar Cells. Advanced Energy Materials 15 (32), 2502398 (2025)
@@ -17,4 +18,11 @@
 > certificate of scientific degree
 > Letters of recommendation and a publication list are appreciated.
 > Please send your documents electronically to Dr. Denis Andrienko, denis.andrienko@mpip-mainz.mpg.de.
-### 
+
+### 2. Dr. Tomasz Marszalek（https://sites.mpip-mainz.mpg.de/222458/Team）
+
+### 3. Christopher Synatschke（https://sites.mpip-mainz.mpg.de/187400/02-Christopher）
+
+### 4. Dr. Yingke Wu（https://sites.mpip-mainz.mpg.de/206248/Research）
+- email: wuyingke@mpip-mainz.mpg.de
+- 
